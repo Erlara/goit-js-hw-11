@@ -19,7 +19,7 @@ let per_page = 40;
 searchForm.addEventListener('submit', onSearch);
 loadBtn.addEventListener('click', onLoad);
 
-loadBtn.hidden = true;
+loadBtn.style.display = 'none';
 
 async function onSearch(evt) {
     evt.preventDefault();
@@ -27,22 +27,20 @@ async function onSearch(evt) {
     newApiService.query = evt.currentTarget.elements.searchQuery.value.trim();
 
     if (evt.currentTarget.elements.searchQuery.value.trim() === '') {
-        loadBtn.hidden = true;
-        return;
+         return;
     }
     
     newApiService.resetPage();
     const images = await newApiService.fetchImages();
-console.log(images)
+    
             if (images.hits.length === 0) {
-             loadBtn.hidden = true;
-             Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');   
+                         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');   
             }
             else {
                 await renderCard(images);
                  simpleLightbox.refresh();
             Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`)
-             loadBtn.hidden = false;
+                   loadBtn.style.display = 'block';
             }
      }      
 
@@ -53,8 +51,7 @@ function renderCard(images) {
 }
 
 function createCard(images) {
-  console.log(images)
-     return images.hits
+       return images.hits
         .map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
             return `<a href="${largeImageURL}">
         <div class="photo-card">
@@ -94,7 +91,7 @@ window.scrollBy({
         const allPage = images.total / per_page;
        
     if (newApiService.page === Math.ceil(allPage)) {
-        loadBtn.hidden = true;
+        loadBtn.style.display = 'none';
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
     }
 }
